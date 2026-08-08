@@ -1,11 +1,11 @@
-import { Button, Input, Label, ErrorText } from "../ui";
+import { Button, Input, ErrorText, Background, FormLayout, Field } from "../ui";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import api from "../api/axios";
 
 const schema = z.object({
   email: z.string().email(),
-  username: z.string().min(3).max(30),
   password: z.string().min(8),
 });
 
@@ -14,33 +14,48 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
+    setError,
   } = useForm({ resolver: zodResolver(schema) });
 
-  const registerUser = (data: {
-    email: string;
-    password: string;
-    username: string;
-  }) => {
-    console.log(data.email);
+  const registerUser = async (data: { email: string; password: string }) => {
+    try {
+      const res = await api.post("/api/v1/auth/signup", data);
+      localStorage.setItem("accessToken", res.data.accessToken);
+      localStorage.setItem("refreshToken", res.data.refreshToken);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError("root", { message: error.message });
+      }
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(registerUser)}>
-      <Label htmlFor="email" />
-      <Input {...register("email")} type="email" />
-      {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+    <Background>
+      <div className="flex items-center justify-center min-h-screen">
+        <FormLayout title="Register" onSubmit={handleSubmit(registerUser)}>
+          <Field>
+            <label className="text-white text-sm font-medium">Email</label>
+            <Input {...register("email")} type="email" />
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+          </Field>
 
-      <Label htmlFor="username" />
-      <Input {...register("username")} type="username" />
-      {errors.username && <ErrorText>{errors.username.message}</ErrorText>}
+          <Field>
+            <label className="text-white text-sm font-medium">Password</label>
+            <Input {...register("password")} type="password" />
+            {errors.password && (
+              <ErrorText>{errors.password.message}</ErrorText>
+            )}
+          </Field>
 
-      <Label htmlFor="password" />
-      <Input {...register("password")} type="password" />
-      {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+          <Field>
+            <Button type="submit">
+              {isSubmitting ? "Signing Up..." : "Sign Up"}
+            </Button>
+          </Field>
 
-      <Button type="submit">
-        {isSubmitting ? "Signing Up..." : "Sign Up"}
-      </Button>
-    </form>
+          {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
+        </FormLayout>
+      </div>
+    </Background>
   );
 }
