@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../api/axios";
+import { useNavigate } from "@tanstack/react-router";
 
 const schema = z.object({
   email: z.string().email(),
@@ -10,6 +11,7 @@ const schema = z.object({
 });
 
 export default function Register() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,7 +23,7 @@ export default function Register() {
     try {
       const res = await api.post("/api/v1/auth/signup", data);
       localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("refreshToken", res.data.refreshToken);
+      navigate({ to: "/chatroom" });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError("root", { message: error.message });

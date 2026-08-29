@@ -9,7 +9,7 @@ export const StyledLink = ({
 }) => {
   return (
     <Link to={to} style={{ padding: "0.65rem 1.75rem" }}
-      className="text-xl text-white no-underline bg-white/15 rounded-lg hover:bg-white/25 transition-colors">
+      className="text-xl text-[#D99B7F] no-underline bg-[#464858] rounded-lg hover:bg-[#A56F63] hover:text-white transition-colors">
       {children}
     </Link>
   );

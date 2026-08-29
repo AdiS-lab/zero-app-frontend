@@ -5,3 +5,4 @@ export { Background } from "./homePage";
 export { H1 } from "./text";
 export { ErrorText } from "./errorText";
 export { Field, FormLayout } from "./field";
+export { Messages, MessageBubble } from "./messages";
