@@ -1,4 +1,4 @@
-import { Button, Input, ErrorText, Background, FormLayout, Field } from "../ui";
+import { Background, Button, Input, ErrorText, FormLayout, Field, Label } from "../ui";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,17 +32,16 @@ export default function Register() {
   };
 
   return (
-    <Background>
-      <div className="flex items-center justify-center min-h-screen">
+    <Background className="text-[#3d2f2f] flex items-center justify-center">
         <FormLayout title="Register" onSubmit={handleSubmit(registerUser)}>
           <Field>
-            <label className="text-white text-sm font-medium">Email</label>
+            <Label>Email</Label>
             <Input {...register("email")} type="email" />
             {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
           </Field>
 
           <Field>
-            <label className="text-white text-sm font-medium">Password</label>
+            <Label>Password</Label>
             <Input {...register("password")} type="password" />
             {errors.password && (
               <ErrorText>{errors.password.message}</ErrorText>
@@ -57,7 +56,6 @@ export default function Register() {
 
           {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
         </FormLayout>
-      </div>
     </Background>
   );
 }

@@ -10,7 +10,7 @@ export const Input = forwardRef<
       type={type}
       data-slot="input"
       style={{ padding: "0.45rem 1rem" }}
-      className={`border border-[#464858] bg-[#0F3040] text-white w-full rounded-lg focus:outline-none focus:border-[#D99B7F] ${className ?? ""}`}
+      className={`border border-[#d4c5b9] bg-[#f5f0eb] text-[#3d2f2f] w-full rounded-sm focus:outline-none focus:border-[#3d2f2f] text-sm ${className ?? ""}`}
       {...props}
     />
   );

@@ -20,7 +20,22 @@ export const MessageBubble = ({
 }: React.HTMLAttributes<HTMLDivElement>) => {
   return (
     <div
-      className={`bg-[#464858] text-[#D99B7F] rounded-lg text-sm px-3 py-2 ${className ?? ""}`}
+      className={`bg-[#f5f0eb] text-[#3d2f2f] rounded-lg text-sm px-3 py-2 self-end ${className ?? ""}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
+
+export const OtherMessageBubble = ({
+  children,
+  className,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div
+      className={`bg-[#d4c5b9] text-[#3d2f2f] rounded-lg text-sm px-3 py-2 self-start ${className ?? ""}`}
       {...props}
     >
       {children}

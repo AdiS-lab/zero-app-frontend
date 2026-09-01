@@ -1,9 +1,9 @@
-import { Button, Input, ErrorText, Background, FormLayout, Field } from "../ui";
+import { Background, Button, Input, ErrorText, FormLayout, Field, Label } from "../ui";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../api/axios";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 const schema = z.object({
   email: z.string().email(),
@@ -32,17 +32,16 @@ export default function Login() {
   };
 
   return (
-    <Background>
-      <div className="flex items-center justify-center min-h-screen">
+    <Background className="text-[#3d2f2f] flex items-center justify-center">
         <FormLayout title="Log In" onSubmit={handleSubmit(loginUser)}>
           <Field>
-            <label className="text-white text-sm font-medium">Email</label>
+            <Label>Email</Label>
             <Input {...register("email")} type="email" />
             {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
           </Field>
 
           <Field>
-            <label className="text-white text-sm font-medium">Password</label>
+            <Label>Password</Label>
             <Input {...register("password")} type="password" />
             {errors.password && (
               <ErrorText>{errors.password.message}</ErrorText>
@@ -56,8 +55,11 @@ export default function Login() {
           </Field>
 
           {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
+
+          <Link to="/forgot-password/check-email" className="text-sm text-[#3d2f2f]/60 hover:text-[#3d2f2f] transition-colors">
+            Forgot password?
+          </Link>
         </FormLayout>
-      </div>
     </Background>
   );
 }

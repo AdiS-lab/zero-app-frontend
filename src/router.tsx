@@ -9,10 +9,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chatroom from "./pages/Chatplace";
 import VerifyEmail from "./pages/VerifyEmail";
+import { ChangePassword, CheckEmail } from "./pages/ForgotPasswordFlow";
+import Settings from "./pages/Settings";
 
 export const rootRoute = createRootRoute({
   component: () => (
-    <div className="flex-1 overflow-auto p-5">
+    <div className="flex-1 overflow-auto">
       <Outlet />
     </div>
   ),
@@ -48,12 +50,38 @@ const chatroomRoute = createRoute({
   component: Chatroom,
 });
 
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/settings",
+  component: Settings,
+});
+
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/forgot-password",
+  component: () => <Outlet />,
+});
+
+const checkEmailRoute = createRoute({
+  getParentRoute: () => forgotPasswordRoute,
+  path: "/check-email",
+  component: CheckEmail,
+});
+
+const changePasswordRoute = createRoute({
+  getParentRoute: () => forgotPasswordRoute,
+  path: "/change-password/$token",
+  component: ChangePassword,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
   chatroomRoute,
   verifyEmailRoute,
+  settingsRoute,
+  forgotPasswordRoute.addChildren([checkEmailRoute, changePasswordRoute]),
 ]);
 
 export const router = createRouter({ routeTree });

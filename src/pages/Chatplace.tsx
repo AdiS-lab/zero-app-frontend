@@ -1,35 +1,41 @@
 import { useEffect, useState } from "react";
-import api from "../api/axios";
+// import api from "../api/axios";
 import {
   Button,
   Input,
   Background,
-  ErrorText,
   Field,
   FormLayout,
   StyledLink,
   Messages,
   MessageBubble,
+  OtherMessageBubble,
 } from "../ui";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:8000");
 
+interface message {
+  userId: string;
+  text: string;
+}
+
 export default function Chatroom() {
-  const [messages, setMessages] = useState<Array<string>>([]);
+  const [messages, setMessages] = useState<Array<message>>([]);
   const [input, setInput] = useState("");
-  const [error, setError] = useState("");
 
   const accessToken = localStorage.getItem("accessToken");
-  const header = { Authorization: `Bearer ${accessToken}` };
+  // const header = { Authorization: `Bearer ${accessToken}` };
+
+  console.log(accessToken);
 
   useEffect(() => {
-    socket.on("receiveMessage", (message) => {
+    socket.on("message sent", (message) => {
       setMessages((prev) => [...prev, message]);
     });
 
     return () => {
-      socket.off("receiveMessage");
+      socket.off("message sent");
     };
   }, []);
 
@@ -38,12 +44,11 @@ export default function Chatroom() {
     if (!input.trim()) return;
 
     try {
-      await api.post("/api/v1/chats/", { message: input }, { headers: header });
-      socket.emit("chat message", input);
+      // await api.post("/api/v1/chats/", { message: input }, { headers: header });
+      socket.emit("chat message", { userId: accessToken, text: input });
       setInput("");
     } catch (e) {
-      console.log(e)
-      setError("Failed to send message");
+      console.log(e);
     }
   }
 
@@ -51,15 +56,19 @@ export default function Chatroom() {
     <Background className="flex flex-col items-center justify-center">
       <FormLayout
         onSubmit={handleMessage}
-        className="max-w-full h-screen justify-end bg-neutral-100"
+        className="max-w-full h-screen justify-end bg-[#3d2f2f]"
       >
         <Messages>
           {messages.length === 0 && (
             <p className="text-white/50 text-sm text-center">No messages yet</p>
           )}
-          {messages.map((msg, i) => (
-            <MessageBubble key={i}>{msg}</MessageBubble>
-          ))}
+          {messages.map((msg, i) =>
+            msg.userId === accessToken ? (
+              <MessageBubble key={i}>{msg.text}</MessageBubble>
+            ) : (
+              <OtherMessageBubble key={i}>{msg.text}</OtherMessageBubble>
+            ),
+          )}
         </Messages>
 
         <Field>
@@ -73,10 +82,10 @@ export default function Chatroom() {
               Send
             </Button>
           </div>
-          {error && <ErrorText>{error}</ErrorText>}
         </Field>
 
         <StyledLink to="/">Back to Home</StyledLink>
+        <StyledLink to="/settings">Settings</StyledLink>
       </FormLayout>
     </Background>
   );

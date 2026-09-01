@@ -8,8 +8,8 @@ export const StyledLink = ({
   children: React.ReactNode;
 }) => {
   return (
-    <Link to={to} style={{ padding: "0.65rem 1.75rem" }}
-      className="text-xl text-[#D99B7F] no-underline bg-[#464858] rounded-lg hover:bg-[#A56F63] hover:text-white transition-colors">
+    <Link to={to} 
+      className="px-4 py-2 text-sm text-[#d4c5b9] no-underline bg-transparent hover:text-[#f5f0eb] transition-colors">
       {children}
     </Link>
   );

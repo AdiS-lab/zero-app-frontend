@@ -17,8 +17,8 @@ export const FormLayout = ({
 }: React.FormHTMLAttributes<HTMLFormElement>) => {
   return (
     <form
-      style={{ padding: "3rem" }}
-      className={`flex flex-col items-center gap-6 w-full max-w-lg border border-[#464858] bg-[#0F3040] ${className ?? ""}`}
+      style={{ padding: "3.5rem 3.5rem 4.5rem" }}
+      className={`flex flex-col items-center gap-7 w-full max-w-md border border-[#d4c5b9] bg-[#f5f0eb] rounded-sm ${className ?? ""}`}
       {...props}
     >
       {children}

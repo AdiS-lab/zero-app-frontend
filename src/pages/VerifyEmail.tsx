@@ -1,7 +1,7 @@
 import { useParams } from "@tanstack/react-router";
 import api from "../api/axios";
 import { useEffect, useState } from "react";
-import { ErrorText } from "../ui";
+import { Background, ErrorText } from "../ui";
 
 export default function VerifyEmail() {
   const [success, setSuccess] = useState<boolean>(false);
@@ -15,7 +15,7 @@ export default function VerifyEmail() {
   useEffect(() => {
     async function checkEmail() {
       try {
-        await api.post("/api/v1/auth/verifyEmail", { accessToken: token });
+        await api.post("/api/v1/auth/verify-email", { accessToken: token });
         setSuccess(true);
       } catch (e) {
         if (e instanceof Error) {
@@ -28,9 +28,9 @@ export default function VerifyEmail() {
   }, [token]);
 
   return (
-    <>
+    <Background className="text-[#f5f0eb] flex items-center justify-center">
       {success ? <div>SUCCESS HEAD BACK</div> : <div>Loading...</div>}
       {error ?? <ErrorText>error</ErrorText>}
-    </>
+    </Background>
   );
 }
