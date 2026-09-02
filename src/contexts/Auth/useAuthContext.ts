@@ -5,7 +5,7 @@ export interface IProfile {
   email: string;
 }
 
-interface IAuthContext {
+export interface IAuthContext {
   profile: IProfile | null;
   login: (data: IProfile) => void;
   logout: () => void;
