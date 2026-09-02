@@ -12,8 +12,11 @@ import {
   OtherMessageBubble,
 } from "../ui";
 import { io } from "socket.io-client";
+import { useAuthContext } from "../contexts/Auth/useAuthContext";
 
 const socket = io("http://localhost:8000");
+
+// babel module resolver
 
 interface message {
   userId: string;
@@ -23,6 +26,9 @@ interface message {
 export default function Chatroom() {
   const [messages, setMessages] = useState<Array<message>>([]);
   const [input, setInput] = useState("");
+  const { profile } = useAuthContext();
+
+  console.log(profile);
 
   const accessToken = localStorage.getItem("accessToken");
   // const header = { Authorization: `Bearer ${accessToken}` };
@@ -30,12 +36,13 @@ export default function Chatroom() {
   console.log(accessToken);
 
   useEffect(() => {
-    socket.on("message sent", (message) => {
+    socket.on("message-sent", (message) => {
       setMessages((prev) => [...prev, message]);
+      console.log("message incoming: ", message);
     });
 
     return () => {
-      socket.off("message sent");
+      socket.off("message-sent");
     };
   }, []);
 
@@ -45,7 +52,7 @@ export default function Chatroom() {
 
     try {
       // await api.post("/api/v1/chats/", { message: input }, { headers: header });
-      socket.emit("chat message", { userId: accessToken, text: input });
+      socket.emit("chat-message", { userId: profile?.userId, text: input });
       setInput("");
     } catch (e) {
       console.log(e);
@@ -63,7 +70,7 @@ export default function Chatroom() {
             <p className="text-white/50 text-sm text-center">No messages yet</p>
           )}
           {messages.map((msg, i) =>
-            msg.userId === accessToken ? (
+            msg.userId === profile?.userId ? (
               <MessageBubble key={i}>{msg.text}</MessageBubble>
             ) : (
               <OtherMessageBubble key={i}>{msg.text}</OtherMessageBubble>

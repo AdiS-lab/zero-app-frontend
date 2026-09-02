@@ -1,11 +1,11 @@
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "./router";
-// import { AuthProvider } from "../store/AuthContext";
+import AuthContextProvider from "./contexts/Auth/AuthContextProvider";
 
 export default function App() {
   return (
-    // <AuthProvider>
+    <AuthContextProvider>
       <RouterProvider router={router} />
-    // </AuthProvider>
+    </AuthContextProvider>
   );
 }

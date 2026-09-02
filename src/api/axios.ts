@@ -36,4 +36,24 @@ api.interceptors.response.use(
   },
 );
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("accessToken");
+
+    if (token) {
+      // Axios v1+ preferred syntax
+      config.headers.set("Authorization", `Bearer ${token}`);
+
+      // Alternative syntax for older Axios versions:
+      // config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    // Handle request errors
+    return Promise.reject(error);
+  },
+);
+
 export default api;

@@ -8,7 +8,6 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chatroom from "./pages/Chatplace";
-import VerifyEmail from "./pages/VerifyEmail";
 import { ChangePassword, CheckEmail } from "./pages/ForgotPasswordFlow";
 import Settings from "./pages/Settings";
 
@@ -36,12 +35,6 @@ const registerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/register",
   component: Register,
-});
-
-const verifyEmailRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/verify/$token",
-  component: VerifyEmail,
 });
 
 const chatroomRoute = createRoute({
@@ -79,7 +72,6 @@ const routeTree = rootRoute.addChildren([
   loginRoute,
   registerRoute,
   chatroomRoute,
-  verifyEmailRoute,
   settingsRoute,
   forgotPasswordRoute.addChildren([checkEmailRoute, changePasswordRoute]),
 ]);
