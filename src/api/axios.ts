@@ -39,15 +39,10 @@ api.interceptors.response.use(
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("accessToken");
-
     if (token) {
-      // Axios v1+ preferred syntax
+      console.log("this is access token before sending: ", token);
       config.headers.set("Authorization", `Bearer ${token}`);
-
-      // Alternative syntax for older Axios versions:
-      // config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   },
   (error) => {

@@ -8,10 +8,11 @@ import {
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Chatroom from "./pages/Chatplace";
+import Chatplace from "./components/Chatplace";
 import { ChangePassword, CheckEmail } from "./pages/ForgotPasswordFlow";
 import Settings from "./pages/Settings";
 import { type IAuthContext } from "./contexts/Auth/useAuthContext";
+import Chathub from "./pages/Chathub";
 
 export const rootRoute = createRootRouteWithContext<{
   auth: IAuthContext | undefined;
@@ -34,7 +35,7 @@ const loginRoute = createRoute({
   path: "/login",
   component: Login,
   beforeLoad: ({ context }) => {
-    if (context.auth?.profile) throw redirect({ to: "/chatroom" });
+    // if (context.auth?.profile) throw redirect({ to: "/chatroom" });
   },
 });
 
@@ -43,14 +44,28 @@ const registerRoute = createRoute({
   path: "/register",
   component: Register,
   beforeLoad: ({ context }) => {
-    if (context.auth?.profile) throw redirect({ to: "/chatroom" });
+    // if (context.auth?.profile) throw redirect({ to: "/chatroom" });
   },
 });
 
-const chatroomRoute = createRoute({
+const chathubRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/chatroom",
-  component: Chatroom,
+  path: "/chathub",
+  component: Chathub,
+});
+
+export const chathubIndexRoute = createRoute({
+  getParentRoute: () => chathubRoute,
+  path: "/",
+  component: () => (
+    <div className="p-4">Select a chatroom to start messaging</div>
+  ),
+});
+
+export const chatplaceRoute = createRoute({
+  getParentRoute: () => chathubRoute,
+  path: "/$chatRoomId",
+  component: Chatplace,
 });
 
 const settingsRoute = createRoute({
@@ -81,9 +96,9 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
   registerRoute,
-  chatroomRoute,
   settingsRoute,
   forgotPasswordRoute.addChildren([checkEmailRoute, changePasswordRoute]),
+  chathubRoute.addChildren([chathubIndexRoute, chatplaceRoute]),
 ]);
 
 export const router = createRouter({

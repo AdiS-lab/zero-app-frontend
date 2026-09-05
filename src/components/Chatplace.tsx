@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import api from "../api/axios";
 import {
   Button,
   Input,
@@ -13,27 +12,54 @@ import {
 } from "../ui";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
+import api from "../api/axios";
+import { useParams } from "@tanstack/react-router";
 
 const socket = io("http://localhost:8000");
-
-// babel module resolver
 
 interface message {
   userId: string;
   text: string;
 }
 
-export default function Chatroom() {
+interface MessageResponse {
+  chatter: string;
+  content: string;
+}
+
+export default function Chatplace() {
   const [messages, setMessages] = useState<Array<message>>([]);
   const [input, setInput] = useState("");
   const { profile } = useAuthContext();
 
-  console.log(profile);
+  const chatroomId = useParams({
+    from: "/chathub/$chatRoomId",
+    select: (param) => param.chatRoomId,
+  });
 
-  const accessToken = localStorage.getItem("accessToken");
-  // const header = { Authorization: `Bearer ${accessToken}` };
+  useEffect(() => {
+    console.log("this is profile of chatter: ", profile);
 
-  console.log(accessToken);
+    console.log("this is chatroomId: ", chatroomId);
+    
+    async function getStoredMessages() {
+      try {
+        const { data } = await api.get(`/api/v1/chats/${chatroomId}`);
+        if (!data.messageList) return;
+
+        const currentMessages = data.messageList.messages.map(
+          (msg: MessageResponse) => {
+            return { muserId: msg.chatter, text: msg.content };
+          },
+        );
+
+        setMessages(currentMessages);
+      } catch (e) {
+        console.log("error retrieving stored messages: ", e);
+      }
+    }
+    getStoredMessages();
+  }, []);
 
   useEffect(() => {
     socket.on("message-sent", (message) => {
@@ -51,11 +77,14 @@ export default function Chatroom() {
     if (!input.trim()) return;
 
     try {
-      // await api.post("/api/v1/chats/", { message: input }, { headers: header });
+      await api.post("/api/v1/chats/add-message", {
+        chatroomId,
+        message: input,
+      });
       socket.emit("chat-message", { userId: profile?.userId, text: input });
       setInput("");
     } catch (e) {
-      console.log(e);
+      console.log("error sending message: ", e);
     }
   }
 

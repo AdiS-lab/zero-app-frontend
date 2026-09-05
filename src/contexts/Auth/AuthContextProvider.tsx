@@ -11,9 +11,13 @@ const AuthContextProvider = ({
 
   useEffect(() => {
     async function updateProfile() {
-      const res = await api.get("/api/v1/auth/me");
-      if (!res) return;
-      setProfile({ userId: res.data.user._id, email: res.data.user.email });
+      try {
+        const res = await api.get("/api/v1/auth/me");
+        if (!res) return;
+        setProfile({ userId: res.data.user._id, email: res.data.user.email });
+      } catch (e) {
+        console.log("error with retrieving profile: ", e);
+      }
     }
     updateProfile();
   }, []);

@@ -37,9 +37,8 @@ export default function Login() {
       if (res.status === 200) {
         const me = await api.get("/api/v1/auth/me");
         login({ userId: me.data.user._id, email: me.data.user.email });
-        console.log(me.data);
       }
-      navigate({ to: "/chatroom" });
+      navigate({ to: "/chathub" });
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError("root", { message: error.message });
