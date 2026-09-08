@@ -13,6 +13,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../api/axios";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
+import buildImage from "../helpers/build-image";
 
 const schema = z.object({
   email: z.string().email(),
@@ -36,7 +37,18 @@ export default function Login() {
 
       if (res.status === 200) {
         const me = await api.get("/api/v1/auth/me");
-        login({ userId: me.data.user._id, email: me.data.user.email });
+        if (!me) throw new Error();
+
+        const avatar = buildImage(
+          me.data.user.avatar.buffer.data,
+          me.data.user.avatar.mimetype,
+        );
+
+        login({
+          userId: me.data.user._id,
+          email: me.data.user.email,
+          avatar,
+        });
       }
       navigate({ to: "/chathub" });
     } catch (error: unknown) {

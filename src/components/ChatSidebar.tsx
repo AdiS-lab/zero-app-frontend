@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Input, ErrorText } from "../ui";
+import { Button, Input, ErrorText, StyledLink } from "../ui";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +21,12 @@ interface RoomResponse {
   chatter: string;
   chattee: string;
 }
+
+/**
+ * setExistingRooms => gets chatrooms by userId + sets state
+ * enterRoom => navigates to nested route, where outlet (chatroom) is displayed
+ * handleCreateRoom => finds user by email and creates a chatroom 
+ */
 
 export const ChatSidebar = () => {
   const [rooms, setRooms] = useState<Room[]>([]);
@@ -90,6 +96,8 @@ export const ChatSidebar = () => {
       style={{ padding: "1rem" }}
       className="flex flex-col gap-4 bg-[#3d2f2f]/30 rounded-sm w-72 min-h-screen"
     >
+      <StyledLink to={"/settings"}>Settings</StyledLink>
+
       <form
         onSubmit={handleSubmit(handleCreateRoom)}
         style={{ padding: "0.75rem" }}

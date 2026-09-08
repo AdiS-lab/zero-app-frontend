@@ -12,13 +12,7 @@ export const Notifications = () => {
       applicationServerKey: vapidPublicKey,
     });
 
-    const accessToken = localStorage.getItem("accessToken");
-
-    await api.post("/api/v1/auth/subscribe", subscriptionObject, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    await api.post("/api/v1/auth/subscribe", subscriptionObject);
   };
 
   return <Button onClick={handleSubscription}>Subscribe</Button>;

@@ -14,18 +14,38 @@ import { io } from "socket.io-client";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import api from "../api/axios";
 import { useParams } from "@tanstack/react-router";
+import buildImage from "../helpers/build-image";
 
 const socket = io("http://localhost:8000");
 
 interface message {
   userId: string;
   text: string;
+  avatar: string;
+}
+
+interface IAvatar {
+  buffer: {
+    data: Array<number>;
+    type: string;
+  };
+  mimetype: string;
 }
 
 interface MessageResponse {
-  chatter: string;
+  chatter: {
+    _id: string;
+    avatar: IAvatar;
+    email: string;
+  };
   content: string;
 }
+
+/**
+ * handleMessage => adds message to db + emits event
+ * getStoredMessages => gets all messages on mount
+ * message-sent => creates listener on mount to recieve events
+ */
 
 export default function Chatplace() {
   const [messages, setMessages] = useState<Array<message>>([]);
@@ -39,9 +59,6 @@ export default function Chatplace() {
 
   useEffect(() => {
     console.log("this is profile of chatter: ", profile);
-
-    console.log("this is chatroomId: ", chatroomId);
-    
     async function getStoredMessages() {
       try {
         const { data } = await api.get(`/api/v1/chats/${chatroomId}`);
@@ -49,7 +66,15 @@ export default function Chatplace() {
 
         const currentMessages = data.messageList.messages.map(
           (msg: MessageResponse) => {
-            return { muserId: msg.chatter, text: msg.content };
+            const avatar = buildImage(
+              msg.chatter.avatar.buffer.data,
+              msg.chatter.avatar.mimetype,
+            );
+            return {
+              userId: msg.chatter._id,
+              text: msg.content,
+              avatar,
+            };
           },
         );
 
@@ -81,7 +106,11 @@ export default function Chatplace() {
         chatroomId,
         message: input,
       });
-      socket.emit("chat-message", { userId: profile?.userId, text: input });
+      socket.emit("chat-message", {
+        userId: profile?.userId,
+        text: input,
+        avatar: profile?.avatar,
+      });
       setInput("");
     } catch (e) {
       console.log("error sending message: ", e);
@@ -100,9 +129,13 @@ export default function Chatplace() {
           )}
           {messages.map((msg, i) =>
             msg.userId === profile?.userId ? (
-              <MessageBubble key={i}>{msg.text}</MessageBubble>
+              <MessageBubble imgId={msg.avatar} key={i}>
+                {msg.text}
+              </MessageBubble>
             ) : (
-              <OtherMessageBubble key={i}>{msg.text}</OtherMessageBubble>
+              <OtherMessageBubble imgId={msg.avatar} key={i}>
+                {msg.text}
+              </OtherMessageBubble>
             ),
           )}
         </Messages>
