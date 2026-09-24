@@ -15,8 +15,11 @@ import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import api from "../api/axios";
 import { useParams } from "@tanstack/react-router";
 import buildImage from "../helpers/build-image";
+import config from "../config/config";
 
-const socket = io("http://localhost:8000");
+const socket = io(config.serverUrl, {
+  auth: { token: localStorage.getItem("accessToken") },
+});
 
 interface message {
   userId: string;
@@ -58,7 +61,6 @@ export default function Chatplace() {
   });
 
   useEffect(() => {
-    console.log("this is profile of chatter: ", profile);
     async function getStoredMessages() {
       try {
         const { data } = await api.get(`/api/v1/chats/${chatroomId}`);
@@ -87,6 +89,18 @@ export default function Chatplace() {
   }, []);
 
   useEffect(() => {
+    socket.on("connect", () => {
+      console.log("ANYTHING");
+    });
+
+    socket.emit("join-room", {
+      chatroomId,
+    });
+
+    socket.on("joined-room", (data) => {
+      console.log("successfully joined room", data);
+    });
+
     socket.on("message-sent", (message) => {
       setMessages((prev) => [...prev, message]);
       console.log("message incoming: ", message);
@@ -94,6 +108,8 @@ export default function Chatplace() {
 
     return () => {
       socket.off("message-sent");
+      socket.off("joined-room");
+      // socket.disconnect();
     };
   }, []);
 
@@ -105,12 +121,15 @@ export default function Chatplace() {
       await api.post("/api/v1/chats/add-message", {
         chatroomId,
         message: input,
-      });
+      }); // updating the db with the message
+
       socket.emit("chat-message", {
+        chatroomId,
         userId: profile?.userId,
         text: input,
         avatar: profile?.avatar,
-      });
+      }); // emitting message so others get it
+
       setInput("");
     } catch (e) {
       console.log("error sending message: ", e);

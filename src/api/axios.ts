@@ -1,11 +1,12 @@
 import axios from "axios";
+import config from "../config/config";
 interface AuthResponseType {
   accessToken: string;
   refreshToken: string;
 }
 
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: config.serverUrl,
   withCredentials: true,
 });
 
