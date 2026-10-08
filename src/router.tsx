@@ -8,20 +8,27 @@ import {
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Chatplace from "./components/Chatplace";
+import Chatplace from "./components/Chatroom/Chatplace";
 import { ChangePassword, CheckEmail } from "./pages/ForgotPasswordFlow";
 import Settings from "./pages/Settings";
 import { type IAuthContext } from "./contexts/Auth/useAuthContext";
 import Chathub from "./pages/Chathub";
+import { NavSidebar } from "./components/NavSidebar";
+import { ChatEmptyState } from "./ui/chat";
 
 export const rootRoute = createRootRouteWithContext<{
   auth: IAuthContext | undefined;
 }>()({
-  component: () => (
-    <div className="flex-1 overflow-auto">
-      <Outlet />
-    </div>
-  ),
+  component: () => {
+    return (
+      <div style={{ display: "flex", height: "100vh", overflow: "hidden" }}>
+        <NavSidebar />
+        <div style={{ flex: 1, overflow: "hidden", minWidth: 0 }}>
+          <Outlet />
+        </div>
+      </div>
+    );
+  },
 });
 
 const indexRoute = createRoute({
@@ -58,7 +65,9 @@ export const chathubIndexRoute = createRoute({
   getParentRoute: () => chathubRoute,
   path: "/",
   component: () => (
-    <div className="p-4">Select a chatroom to start messaging</div>
+    <div style={{ flex: 1, height: "100%", backgroundColor: "var(--background-primary)" }}>
+      <ChatEmptyState />
+    </div>
   ),
 });
 

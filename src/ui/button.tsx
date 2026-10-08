@@ -1,16 +1,24 @@
-export const Button = ({
-  className,
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
-  return (
-    <button
-      data-slot="button"
-      style={{ padding: "0.5rem 1rem" }}
-      className={`bg-[#3d2f2f] border-none rounded-sm text-[#f5f0eb] outline-none cursor-pointer hover:bg-[#2a1f1f] transition-colors text-sm font-medium ${className ?? ""}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+export const Button = ({ className, children, style, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+  <button
+    data-slot="button"
+    style={{
+      padding: "8px 20px",
+      backgroundColor: "var(--interactive-accent)",
+      color: "var(--text-on-accent)",
+      border: "none",
+      borderRadius: 8,
+      cursor: "pointer",
+      fontSize: 14,
+      fontWeight: 500,
+      outline: "none",
+      transition: "background 0.15s, opacity 0.15s",
+      ...style,
+    }}
+    className={className}
+    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--interactive-accent-hover)"; }}
+    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--interactive-accent)"; }}
+    {...props}
+  >
+    {children}
+  </button>
+);

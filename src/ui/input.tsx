@@ -1,17 +1,27 @@
 import { forwardRef } from "react";
 
-export const Input = forwardRef<
-  HTMLInputElement,
-  React.InputHTMLAttributes<HTMLInputElement>
->(({ className, type, ...props }, ref) => {
-  return (
+export const Input = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  ({ className, type, style, ...props }, ref) => (
     <input
       ref={ref}
       type={type}
       data-slot="input"
-      style={{ padding: "0.45rem 1rem" }}
-      className={`border border-[#d4c5b9] bg-[#f5f0eb] text-[#3d2f2f] w-full rounded-sm focus:outline-none focus:border-[#3d2f2f] text-sm ${className ?? ""}`}
+      style={{
+        padding: "8px 14px",
+        backgroundColor: "var(--background-primary-alt)",
+        color: "var(--text-normal)",
+        border: "1px solid var(--background-modifier-border)",
+        borderRadius: 8,
+        width: "100%",
+        fontSize: 14,
+        outline: "none",
+        transition: "border-color 0.15s",
+        ...style,
+      }}
+      onFocus={(e) => { e.currentTarget.style.borderColor = "var(--background-modifier-border-focus)"; }}
+      onBlur={(e) => { e.currentTarget.style.borderColor = "var(--background-modifier-border)"; }}
+      className={className}
       {...props}
     />
-  );
-});
+  ),
+);

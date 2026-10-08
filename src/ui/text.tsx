@@ -1,7 +1,5 @@
-export const H1 = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <h1 className="text-8xl font-bold mb-8 text-[#f5f0eb]">
-      {children}
-    </h1>
-  )
-}
+export const H1 = ({ children }: { children: React.ReactNode }) => (
+  <h1 style={{ fontSize: "clamp(3rem, 8vw, 6rem)", fontWeight: 700, color: "var(--text-normal)", lineHeight: 1.1 }}>
+    {children}
+  </h1>
+);

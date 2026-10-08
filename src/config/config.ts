@@ -9,8 +9,8 @@ const config: IConfig = {
   baseUrl: import.meta.env.VITE_BASE_URL,
   serverUrl:
     import.meta.env.VITE_APP_MODE === "DEV"
-      ? import.meta.env.DEV_SERVER_URL
-      : import.meta.env.PROD_SERVER_URL,
+      ? import.meta.env.VITE_DEV_SERVER_URL
+      : import.meta.env.VITE_PROD_SERVER_URL,
 };
 
 export default config;

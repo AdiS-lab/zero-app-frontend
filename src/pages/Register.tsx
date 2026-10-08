@@ -1,5 +1,4 @@
 import {
-  Background,
   Button,
   Input,
   ErrorText,
@@ -14,6 +13,7 @@ import api from "../api/axios";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import buildImage from "../helpers/build-image";
+import config from "../config/config";
 
 const schema = z.object({
   email: z.string().email(),
@@ -32,6 +32,7 @@ export default function Register() {
 
   const registerUser = async (data: { email: string; password: string }) => {
     try {
+      console.log(config.serverUrl);
       const res = await api.post("/api/v1/auth/signup", data);
       localStorage.setItem("accessToken", res.data.accessToken);
       if (res.status == 201) {
@@ -52,14 +53,15 @@ export default function Register() {
       navigate({ to: "/chathub" });
     } catch (error: unknown) {
       if (error instanceof Error) {
+        console.log(error);
         setError("root", { message: error.message });
       }
     }
   };
 
   return (
-    <Background className="text-[#3d2f2f] flex items-center justify-center">
-      <FormLayout title="Register" onSubmit={handleSubmit(registerUser)}>
+    <div style={{ flex: 1, height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--background-primary)" }}>
+      <FormLayout onSubmit={handleSubmit(registerUser)}>
         <Field>
           <Label>Email</Label>
           <Input {...register("email")} type="email" />
@@ -80,6 +82,6 @@ export default function Register() {
 
         {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
       </FormLayout>
-    </Background>
+    </div>
   );
 }

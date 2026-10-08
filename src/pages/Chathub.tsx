@@ -1,12 +1,11 @@
-import { Background } from "../ui";
-import { ChatSidebar } from "../components/ChatSidebar";
+import { ChatSidebar } from "../components/Chatroom/ChatSidebar";
 import { Outlet } from "@tanstack/react-router";
 
 export default function Chathub() {
   return (
-    <Background className="flex">
+    <div style={{ display: "flex", height: "100%", overflow: "hidden", backgroundColor: "var(--background-primary)" }}>
       <ChatSidebar />
       <Outlet />
-    </Background>
+    </div>
   );
 }

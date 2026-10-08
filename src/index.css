@@ -1,7 +1,76 @@
 @import "tailwindcss";
 
-* {
+/* ─── Design tokens (dark mode as default) ───────────────────────── */
+:root {
+  --accent-h: 258;
+  --accent-s: 88%;
+  --accent-l: 66%;
+
+  /* Base scale */
+  --color-base-00:  #1c1c1c;
+  --color-base-05:  #212121;
+  --color-base-10:  #232323;
+  --color-base-20:  #282828;
+  --color-base-25:  #2e2e2e;
+  --color-base-30:  #333333;
+  --color-base-35:  #3f3f3f;
+  --color-base-40:  #555555;
+  --color-base-50:  #666666;
+  --color-base-60:  #999999;
+  --color-base-70:  #b3b3b3;
+  --color-base-100: #dadada;
+
+  --color-accent:   hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --color-accent-1: hsl(calc(var(--accent-h) - 3), calc(var(--accent-s) * 1.02), calc(var(--accent-l) * 1.15));
+  --color-accent-2: hsl(calc(var(--accent-h) - 5), calc(var(--accent-s) * 1.05), calc(var(--accent-l) * 1.29));
+
+  /* Semantic layer */
+  --background-primary:               var(--color-base-00);
+  --background-primary-alt:           var(--color-base-10);
+  --background-secondary:             var(--color-base-20);
+  --background-modifier-hover:        var(--color-base-25);
+  --background-modifier-border:       var(--color-base-30);
+  --background-modifier-border-hover: var(--color-base-35);
+  --background-modifier-border-focus: var(--color-base-40);
+  --text-normal:                      var(--color-base-100);
+  --text-muted:                       var(--color-base-70);
+  --text-faint:                       var(--color-base-50);
+  --icon-color:                       var(--color-base-60);
+  --text-accent:                      var(--color-accent);
+  --text-accent-hover:                var(--color-accent-1);
+  --interactive-accent:               var(--color-accent);
+  --interactive-accent-hover:         var(--color-accent-1);
+  --text-on-accent:                   #ffffff;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-primary);
+  color: var(--text-normal);
+}
+
+/* ─── Scrollbars (CSS Scrollbars Level 1 — no webkit legacy) ─────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--background-modifier-border) transparent;
+}
+
+/* ─── Global input placeholder ───────────────────────────────────── */
+::placeholder {
+  color: var(--text-faint);
+  opacity: 1;
+}
+
+/* ─── Hover utility ──────────────────────────────────────────────── */
+.hover-fill {
+  transition: background-color 0.1s;
+}
+.hover-fill:hover {
+  background-color: var(--background-modifier-hover);
 }

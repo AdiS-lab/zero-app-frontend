@@ -1,5 +1,4 @@
 import {
-  Background,
   Button,
   Input,
   ErrorText,
@@ -59,8 +58,8 @@ export default function Login() {
   };
 
   return (
-    <Background className="text-[#3d2f2f] flex items-center justify-center">
-      <FormLayout title="Log In" onSubmit={handleSubmit(loginUser)}>
+    <div style={{ flex: 1, height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--background-primary)" }}>
+      <FormLayout onSubmit={handleSubmit(loginUser)}>
         <Field>
           <Label>Email</Label>
           <Input {...register("email")} type="email" />
@@ -83,11 +82,13 @@ export default function Login() {
 
         <Link
           to="/forgot-password/check-email"
-          className="text-sm text-[#3d2f2f]/60 hover:text-[#3d2f2f] transition-colors"
+          style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none", transition: "color 0.15s" }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-faint)"; }}
         >
           Forgot password?
         </Link>
       </FormLayout>
-    </Background>
+    </div>
   );
 }
