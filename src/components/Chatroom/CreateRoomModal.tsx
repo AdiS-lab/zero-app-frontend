@@ -4,7 +4,14 @@ import api from "../../api/axios";
 import { useAuthContext } from "../../contexts/Auth/useAuthContext";
 import EmailInput from "./EmailInput";
 import type { IEmailVals } from "./EmailInput";
-import { ModalBackdrop, ModalPanel, ModalHeader, ModalTitle, ModalCloseBtn, PrimaryButton } from "../../ui/modal";
+import {
+  ModalBackdrop,
+  ModalPanel,
+  ModalHeader,
+  ModalTitle,
+  ModalCloseBtn,
+  PrimaryButton,
+} from "../../ui/modal";
 
 interface Room {
   id: string;
@@ -29,14 +36,27 @@ export function CreateRoomModal({ onClose, onCreated }: Props) {
     try {
       const userIds: string[] = [profile.userId];
       for (const email of emails) {
-        const res = await api.post("/api/v1/users/by-email", { email: email.value });
+        const res = await api.post("/api/v1/users/by-email", {
+          email: email.value,
+        });
         userIds.push(res.data.user._id);
       }
+
       const { data } = await api.post("/api/v1/chatrooms/create", {
         createdBy: profile.userId,
         participants: userIds,
       });
-      onCreated({ id: data.data._id, createdBy: data.data.createdBy, participants: data.data.participants });
+
+      const chatroomExists =
+        data.message.toLowerCase() === "chatroom already exists";
+
+      if (!chatroomExists) {
+        onCreated({
+          id: data.data._id,
+          createdBy: data.data.createdBy,
+          participants: data.data.participants,
+        });
+      }
       onClose();
     } catch (e) {
       if (e instanceof Error) setError(e.message);
@@ -55,9 +75,12 @@ export function CreateRoomModal({ onClose, onCreated }: Props) {
 
         <EmailInput values={emails} onChange={(vals) => setEmails([...vals])} />
 
-        {error && <p style={{ color: "#f87171", fontSize: 12 }}>{error}</p>}
+        {error && <p style={{ color: "var(--color-danger)", fontSize: 13 }}>{error}</p>}
 
-        <PrimaryButton onClick={handleCreate} disabled={loading || emails.length === 0}>
+        <PrimaryButton
+          onClick={handleCreate}
+          disabled={loading || emails.length === 0}
+        >
           {loading ? "Creating..." : "Start Conversation"}
         </PrimaryButton>
       </ModalPanel>

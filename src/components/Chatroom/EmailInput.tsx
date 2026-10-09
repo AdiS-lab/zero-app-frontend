@@ -20,29 +20,28 @@ interface EmailInputProps {
 
 const EmailSchema = z.string().email("invalid email");
 
-// react-select can't read CSS vars directly — resolved values from design tokens (dark)
 const selectStyles: StylesConfig<IEmailVals, true> = {
   control: (base) => ({
     ...base,
-    backgroundColor: "#232323",       // --background-primary-alt
-    borderColor: "#333333",            // --background-modifier-border
-    borderRadius: 12,
+    backgroundColor: "var(--background-input)",
+    borderColor: "var(--border-field)",
+    borderRadius: 0,
     padding: "4px 8px",
     boxShadow: "none",
-    ":hover": { borderColor: "#3f3f3f" },
+    ":hover": { borderColor: "var(--border-field-hover)" },
   }),
-  input: (base) => ({ ...base, color: "#dadada", fontSize: 14 }),
-  placeholder: (base) => ({ ...base, color: "#666666", fontSize: 14 }),
+  input: (base) => ({ ...base, color: "var(--text-normal)", fontSize: 14 }),
+  placeholder: (base) => ({ ...base, color: "var(--text-faint)", fontSize: 14 }),
   multiValue: (base) => ({
     ...base,
-    backgroundColor: "color-mix(in srgb, #8a5cf5 20%, #232323)",
-    borderRadius: 6,
+    backgroundColor: "var(--background-hover)",
+    borderRadius: 0,
   }),
-  multiValueLabel: (base) => ({ ...base, color: "#dadada", fontSize: 13 }),
+  multiValueLabel: (base) => ({ ...base, color: "var(--text-normal)", fontSize: 13 }),
   multiValueRemove: (base) => ({
     ...base,
-    color: "#999999",
-    ":hover": { backgroundColor: "#2e2e2e", color: "#dadada" },
+    color: "var(--text-muted)",
+    ":hover": { backgroundColor: "var(--background-selected)", color: "var(--text-normal)" },
   }),
   valueContainer: (base) => ({ ...base, padding: "0", gap: 4 }),
 };

@@ -1,5 +1,56 @@
 /* ─── Chat area UI primitives ────────────────────────────────────── */
 
+// ─── Tab bar ──────────────────────────────────────────────────────
+
+export const ChatTabBar = ({ children }: { children: React.ReactNode }) => (
+  <div style={{
+    display: "flex",
+    alignItems: "center",
+    height: 52,
+    borderBottom: "1px solid var(--separator)",
+    padding: "0 16px",
+    flexShrink: 0,
+  }}>
+    {children}
+  </div>
+);
+
+export const ChatTab = ({
+  active,
+  onClick,
+  children,
+}: {
+  active?: boolean;
+  onClick?: () => void;
+  children: React.ReactNode;
+}) => (
+  <button
+    onClick={onClick}
+    style={{
+      background: "none",
+      border: "none",
+      borderBottom: active
+        ? "2px solid var(--color-accent)"
+        : "2px solid transparent",
+      padding: "10px 16px",
+      marginBottom: -1,
+      cursor: "pointer",
+      color: active ? "var(--text-normal)" : "var(--text-faint)",
+      fontSize: 13,
+      fontWeight: active ? 600 : 400,
+      letterSpacing: "-0.01em",
+      transition: "color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out)",
+      flexShrink: 0,
+    }}
+    onMouseEnter={(e) => { if (!active) e.currentTarget.style.color = "var(--text-muted)"; }}
+    onMouseLeave={(e) => { if (!active) e.currentTarget.style.color = "var(--text-faint)"; }}
+  >
+    {children}
+  </button>
+);
+
+// ─── Main pane ────────────────────────────────────────────────────
+
 export const ChatPane = ({
   children,
   onSubmit,
@@ -16,12 +67,11 @@ export const ChatPane = ({
 );
 
 export const ChatScrollArea = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ flex: 1, overflowY: "auto", padding: 24 }}>
+  <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px", display: "flex", flexDirection: "column" }}>
     {children}
   </div>
 );
 
-// Centered placeholder — user will populate with content later
 export const ChatEmptyState = () => (
   <div style={{
     height: "100%",
@@ -44,10 +94,11 @@ export const ChatEmptyState = () => (
 export const ChatInputSection = ({ children }: { children: React.ReactNode }) => (
   <div style={{ padding: "0 16px 16px" }}>
     <div style={{
-      border: "1px solid var(--background-modifier-border)",
-      borderRadius: 12,
-      backgroundColor: "var(--background-primary-alt)",
+      border: "1px solid var(--border-field)",
+      borderRadius: "var(--radius-control)",
+      backgroundColor: "var(--background-input)",
       overflow: "hidden",
+      transition: "border-color var(--dur-fast) var(--ease-out)",
     }}>
       {children}
     </div>
@@ -60,13 +111,12 @@ const FmtBtn = ({ children, title }: { children: React.ReactNode; title?: string
   <button
     type="button"
     title={title}
-    className="hover-fill"
     style={{
       background: "none",
       border: "none",
       cursor: "pointer",
       color: "var(--icon-color)",
-      borderRadius: 6,
+      borderRadius: "var(--radius-control)",
       width: 28,
       height: 28,
       display: "flex",
@@ -75,7 +125,7 @@ const FmtBtn = ({ children, title }: { children: React.ReactNode; title?: string
       fontSize: 13,
       fontWeight: 700,
       flexShrink: 0,
-      transition: "color 0.1s",
+      transition: "color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-normal)"; }}
     onMouseLeave={(e) => { e.currentTarget.style.color = "var(--icon-color)"; }}
@@ -85,7 +135,7 @@ const FmtBtn = ({ children, title }: { children: React.ReactNode; title?: string
 );
 
 const FmtDivider = () => (
-  <div style={{ width: 1, height: 14, backgroundColor: "var(--background-modifier-border)", margin: "0 4px", flexShrink: 0 }} />
+  <div style={{ width: 1, height: 14, backgroundColor: "var(--separator)", margin: "0 4px", flexShrink: 0 }} />
 );
 
 export const ChatFormatBar = () => (
@@ -94,7 +144,7 @@ export const ChatFormatBar = () => (
     alignItems: "center",
     padding: "6px 10px",
     gap: 2,
-    borderBottom: "1px solid var(--background-modifier-border)",
+    borderBottom: "1px solid var(--separator)",
   }}>
     <FmtBtn title="Bold"><b>B</b></FmtBtn>
     <FmtBtn title="Italic"><i style={{ fontStyle: "italic", fontWeight: 400 }}>I</i></FmtBtn>
@@ -170,10 +220,10 @@ export const ChatTextArea = ({
       fontSize: 14,
       padding: "12px 16px",
       resize: "none",
-      minHeight: 56,
+      minHeight: 36,
       maxHeight: 200,
       lineHeight: 1.55,
-      // field-sizing: content — auto-resize to content (CSS Scrollbars L1)
+      fontFamily: "var(--font-ui)",
       fieldSizing: "content",
     } as React.CSSProperties}
   />
@@ -187,7 +237,7 @@ export const ChatActionRow = ({ left, right }: { left: React.ReactNode; right: R
     alignItems: "center",
     justifyContent: "space-between",
     padding: "6px 10px",
-    borderTop: "1px solid var(--background-modifier-border)",
+    borderTop: "1px solid var(--separator)",
   }}>
     <div style={{ display: "flex", alignItems: "center", gap: 2 }}>{left}</div>
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>{right}</div>
@@ -199,13 +249,12 @@ const ActionBtn = ({ children, title, onClick }: { children: React.ReactNode; ti
     type="button"
     title={title}
     onClick={onClick}
-    className="hover-fill"
     style={{
       background: "none",
       border: "none",
       cursor: "pointer",
       color: "var(--icon-color)",
-      borderRadius: 6,
+      borderRadius: "var(--radius-control)",
       width: 30,
       height: 30,
       display: "flex",
@@ -213,7 +262,7 @@ const ActionBtn = ({ children, title, onClick }: { children: React.ReactNode; ti
       justifyContent: "center",
       fontSize: 13,
       flexShrink: 0,
-      transition: "color 0.1s",
+      transition: "color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-normal)"; }}
     onMouseLeave={(e) => { e.currentTarget.style.color = "var(--icon-color)"; }}
@@ -225,11 +274,10 @@ const ActionBtn = ({ children, title, onClick }: { children: React.ReactNode; ti
 export const ChatFileButton = ({ onChange }: { onChange?: (file: File) => void }) => (
   <label
     title="Attach file"
-    className="hover-fill"
     style={{
       cursor: "pointer",
       color: "var(--icon-color)",
-      borderRadius: 6,
+      borderRadius: "var(--radius-control)",
       width: 30,
       height: 30,
       display: "flex",
@@ -239,7 +287,7 @@ export const ChatFileButton = ({ onChange }: { onChange?: (file: File) => void }
       fontWeight: 300,
       flexShrink: 0,
       lineHeight: 1,
-      transition: "color 0.1s",
+      transition: "color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-normal)"; }}
     onMouseLeave={(e) => { e.currentTarget.style.color = "var(--icon-color)"; }}
@@ -263,21 +311,21 @@ export const ChatSendBtn = () => (
     type="submit"
     title="Send"
     style={{
-      backgroundColor: "var(--interactive-accent)",
-      color: "var(--text-on-accent)",
+      backgroundColor: "var(--color-accent-fill)",
+      color: "var(--bubble-sent-text)",
       border: "none",
-      borderRadius: 8,
-      width: 32,
-      height: 32,
+      borderRadius: "var(--radius-control)",
+      width: 28,
+      height: 28,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
       flexShrink: 0,
-      transition: "background 0.15s",
+      transition: "filter var(--dur-fast) var(--ease-out)",
     }}
-    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--interactive-accent-hover)"; }}
-    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--interactive-accent)"; }}
+    onMouseEnter={(e) => { e.currentTarget.style.filter = "brightness(.92)"; }}
+    onMouseLeave={(e) => { e.currentTarget.style.filter = "none"; }}
   >
     <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none">
       <polygon points="22 2 15 22 11 13 2 9 22 2" />

@@ -13,7 +13,7 @@ export const NavContainer = ({ children }: { children: React.ReactNode }) => (
     paddingTop: 20,
     paddingBottom: 20,
     gap: 4,
-    borderRight: "1px solid var(--background-modifier-border)",
+    borderRight: "1px solid var(--separator)",
   }}>
     {children}
   </aside>
@@ -23,12 +23,12 @@ export const NavLogo = ({ children }: { children: React.ReactNode }) => (
   <div style={{
     width: 36,
     height: 36,
-    borderRadius: "50%",
-    backgroundColor: "var(--interactive-accent)",
+    borderRadius: "var(--radius-avatar)",
+    background: "var(--avatar-bg)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "var(--text-on-accent)",
+    color: "var(--color-base-100)",
     fontWeight: 700,
     fontSize: 14,
     marginBottom: 12,
@@ -48,19 +48,19 @@ export const NavIconButton = ({ active, children, ...props }: NavIconButtonProps
     style={{
       width: 40,
       height: 40,
-      borderRadius: 8,
+      borderRadius: "var(--radius-control)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       border: "none",
       cursor: "pointer",
-      background: active ? "color-mix(in srgb, var(--interactive-accent) 22%, transparent)" : "transparent",
-      color: active ? "var(--interactive-accent)" : "var(--icon-color)",
-      transition: "background 0.15s, color 0.15s",
+      background: active ? "var(--background-selected)" : "transparent",
+      color: active ? "var(--text-normal)" : "var(--icon-color)",
+      transition: "background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => {
       if (!active) {
-        e.currentTarget.style.background = "var(--background-modifier-hover)";
+        e.currentTarget.style.background = "var(--background-hover)";
         e.currentTarget.style.color = "var(--text-muted)";
       }
     }}
@@ -90,17 +90,17 @@ export const NavAvatar = ({
   const base: React.CSSProperties = {
     width: 32,
     height: 32,
-    borderRadius: "50%",
+    borderRadius: "var(--radius-avatar)",
     flexShrink: 0,
     cursor: "pointer",
-    transition: "opacity 0.15s",
+    transition: "opacity var(--dur-fast)",
   };
   return src ? (
     <img src={src} alt="" onClick={onClick} style={{ ...base, objectFit: "cover" }} />
   ) : (
     <div
       onClick={onClick}
-      style={{ ...base, backgroundColor: "var(--background-secondary)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-normal)", fontSize: 12, fontWeight: 600, userSelect: "none" }}
+      style={{ ...base, background: "var(--avatar-bg)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--color-base-100)", fontSize: 12, fontWeight: 600, userSelect: "none" }}
     >
       {initial ?? "?"}
     </div>
@@ -120,30 +120,27 @@ export const NavProfilePopover = ({ open, email, onSettings, onClose }: NavProfi
   if (!open) return null;
   return (
     <>
-      {/* Invisible backdrop */}
       <div style={{ position: "fixed", inset: 0, zIndex: 99 }} onClick={onClose} />
-      {/* Popover panel */}
       <div style={{
         position: "absolute",
         left: "calc(100% + 8px)",
         bottom: 16,
         width: 220,
-        backgroundColor: "var(--background-primary-alt)",
-        border: "1px solid var(--background-modifier-border)",
-        borderRadius: 12,
+        backgroundColor: "var(--background-raised)",
+        border: "1px solid var(--separator)",
+        borderRadius: "var(--radius-control)",
         padding: "4px 0",
-        boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+        boxShadow: "var(--popover-shadow)",
         zIndex: 100,
       }}>
         {email && (
-          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--background-modifier-border)" }}>
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--separator)" }}>
             <p style={{ color: "var(--text-faint)", fontSize: 10, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>Account</p>
             <p style={{ color: "var(--text-normal)", fontSize: 13, marginTop: 4, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{email}</p>
           </div>
         )}
         <button
           onClick={onSettings}
-          className="hover-fill"
           style={{
             display: "flex",
             alignItems: "center",
@@ -156,7 +153,10 @@ export const NavProfilePopover = ({ open, email, onSettings, onClose }: NavProfi
             color: "var(--text-normal)",
             fontSize: 14,
             textAlign: "left",
+            transition: "background var(--dur-fast) var(--ease-out)",
           }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--background-hover)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "none"; }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--icon-color)", flexShrink: 0 }}>
             <circle cx="12" cy="12" r="3" />

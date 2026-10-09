@@ -1,61 +1,61 @@
 /* ─── Message UI primitives ──────────────────────────────────────── */
 
 export const Messages = ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={`flex flex-col w-full ${className ?? ""}`} style={{ gap: 6 }} {...props}>
+  <div style={{ display: "flex", flexDirection: "column", width: "100%", gap: 2, marginTop: "auto" }} className={className} {...props}>
     {children}
   </div>
 );
 
-const avatarStyle: React.CSSProperties = {
-  width: 32,
-  height: 32,
-  borderRadius: "50%",
-  objectFit: "cover",
-  flexShrink: 0,
-};
+const AVATAR_SIZE = 40;
+const AVATAR_GAP = 12;
+const INDENT = AVATAR_SIZE + AVATAR_GAP;
 
-const bubbleBase: React.CSSProperties = {
-  borderRadius: 12,
-  padding: "10px 16px",
-  fontSize: 14,
-  lineHeight: 1.55,
-  maxWidth: 360,
-};
+function formatTime(ts: number): string {
+  if (!ts || isNaN(ts)) return "";
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
 
-// Sent by current user — right-aligned, avatar on right
-export const MessageBubble = ({
-  children,
-  className,
-  imgId,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & { imgId?: string }) => (
-  <div
-    className={`flex items-end self-end ${className ?? ""}`}
-    style={{ gap: 10 }}
-    {...props}
-  >
-    <div style={{ ...bubbleBase, backgroundColor: "var(--interactive-accent)", color: "var(--text-on-accent)" }}>
-      {children}
+interface MessageRowProps {
+  text: string;
+  avatar?: string;
+  username: string;
+  timestamp: number;
+  isOwn: boolean;
+  showHeader: boolean;
+}
+
+export const MessageRow = ({ text, avatar, username, timestamp, isOwn, showHeader }: MessageRowProps) => {
+  if (showHeader) {
+    return (
+      <div style={{ display: "flex", gap: AVATAR_GAP, marginTop: 12, paddingLeft: 16, paddingRight: 16 }}>
+        {avatar
+          ? <img src={avatar} alt="" style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: "var(--radius-avatar)", objectFit: "cover", flexShrink: 0 }} />
+          : <div style={{ width: AVATAR_SIZE, height: AVATAR_SIZE, borderRadius: "var(--radius-avatar)", background: "var(--avatar-bg)", flexShrink: 0 }} />
+        }
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+            <span style={{ fontSize: 13, fontWeight: 600, color: isOwn ? "var(--color-accent)" : "var(--text-normal)", letterSpacing: "-0.01em" }}>
+              {username}
+            </span>
+            <span style={{ fontSize: 12, color: "var(--text-muted)", fontVariantNumeric: "tabular-nums" }}>
+              {formatTime(timestamp)}
+            </span>
+          </div>
+          <p style={{ fontSize: 14, color: "var(--text-normal)", lineHeight: "19px", margin: 0, wordBreak: "break-word" }}>
+            {text}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ paddingLeft: INDENT + 16, paddingRight: 16, marginTop: 2 }}>
+      <p style={{ fontSize: 14, color: "var(--text-normal)", lineHeight: "19px", margin: 0, wordBreak: "break-word" }}>
+        {text}
+      </p>
     </div>
-    {imgId && <img src={imgId} alt="" style={avatarStyle} />}
-  </div>
-);
-
-// Received from others — left-aligned, avatar on left
-export const OtherMessageBubble = ({
-  children,
-  className,
-  imgId,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & { imgId?: string }) => (
-  <div
-    className={`flex items-end self-start ${className ?? ""}`}
-    style={{ gap: 10 }}
-    {...props}
-  >
-    {imgId && <img src={imgId} alt="" style={avatarStyle} />}
-    <div style={{ ...bubbleBase, backgroundColor: "var(--background-secondary)", color: "var(--text-normal)" }}>
-      {children}
-    </div>
-  </div>
-);
+  );
+};

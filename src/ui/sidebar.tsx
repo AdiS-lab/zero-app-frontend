@@ -2,10 +2,10 @@
 
 export const SidebarPanel = ({ children }: { children: React.ReactNode }) => (
   <div style={{
-    width: 280,
+    width: 300,
     height: "100%",
-    backgroundColor: "var(--background-secondary)",
-    borderRight: "1px solid var(--background-modifier-border)",
+    background: "var(--background-secondary)",
+    borderRight: "1px solid var(--separator)",
     display: "flex",
     flexDirection: "column",
     flexShrink: 0,
@@ -16,18 +16,20 @@ export const SidebarPanel = ({ children }: { children: React.ReactNode }) => (
 
 export const SidebarHeader = ({ children }: { children: React.ReactNode }) => (
   <div style={{
+    height: 52,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: "32px 24px 20px",
-    borderBottom: "1px solid var(--background-modifier-border)",
+    padding: "0 16px",
+    borderBottom: "1px solid var(--separator)",
+    flexShrink: 0,
   }}>
     {children}
   </div>
 );
 
 export const SidebarTitle = ({ children }: { children: React.ReactNode }) => (
-  <h1 style={{ color: "var(--text-normal)", fontSize: 20, fontWeight: 600, letterSpacing: "-0.2px" }}>
+  <h1 style={{ color: "var(--text-normal)", fontSize: 13, fontWeight: 600, letterSpacing: "-0.01em" }}>
     {children}
   </h1>
 );
@@ -38,22 +40,22 @@ export const SidebarIconBtn = ({ children, onClick }: { children: React.ReactNod
     style={{
       width: 28,
       height: 28,
-      borderRadius: "50%",
+      borderRadius: "var(--radius-control)",
       backgroundColor: "transparent",
-      border: "1px solid var(--background-modifier-border)",
+      border: "1px solid var(--separator)",
       color: "var(--icon-color)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
-      transition: "border-color 0.15s, color 0.15s",
+      transition: "border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => {
-      e.currentTarget.style.borderColor = "var(--background-modifier-border-hover)";
+      e.currentTarget.style.borderColor = "var(--border-field-hover)";
       e.currentTarget.style.color = "var(--text-normal)";
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.borderColor = "var(--background-modifier-border)";
+      e.currentTarget.style.borderColor = "var(--separator)";
       e.currentTarget.style.color = "var(--icon-color)";
     }}
   >
@@ -62,7 +64,7 @@ export const SidebarIconBtn = ({ children, onClick }: { children: React.ReactNod
 );
 
 export const SidebarList = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+  <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", padding: "4px 0" }}>
     {children}
   </div>
 );
@@ -70,15 +72,18 @@ export const SidebarList = ({ children }: { children: React.ReactNode }) => (
 export const SidebarItem = ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
   <div
     onClick={onClick}
-    className="hover-fill"
     style={{
       display: "flex",
       alignItems: "center",
       gap: 12,
-      padding: "14px 24px",
+      height: 64,
+      padding: "0 12px",
       cursor: "pointer",
-      borderBottom: "1px solid var(--background-modifier-border)",
+      borderRadius: "var(--radius-control)",
+      transition: "background var(--dur-fast) var(--ease-out)",
     }}
+    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--background-hover)"; }}
+    onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
   >
     {children}
   </div>
@@ -86,15 +91,15 @@ export const SidebarItem = ({ children, onClick }: { children: React.ReactNode; 
 
 export const SidebarAvatar = ({ children }: { children: React.ReactNode }) => (
   <div style={{
-    width: 36,
-    height: 36,
-    borderRadius: "50%",
-    backgroundColor: "color-mix(in srgb, var(--interactive-accent) 20%, var(--background-secondary))",
+    width: 40,
+    height: 40,
+    borderRadius: "var(--radius-avatar)",
+    background: "var(--avatar-bg)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "var(--interactive-accent)",
-    fontSize: 12,
+    color: "var(--color-base-100)",
+    fontSize: 14,
     fontWeight: 600,
     flexShrink: 0,
     userSelect: "none",

@@ -22,7 +22,7 @@ interface RoomResponse {
 
 interface RoomCardProps {
   room: Room;
-  userId?: string;
+  userId?: string;   // filters current user out of the participant list so we show "the other person"
   onClick: () => void;
 }
 

@@ -11,7 +11,7 @@ export const ModalBackdrop = ({
     style={{
       position: "fixed",
       inset: 0,
-      backgroundColor: "color-mix(in srgb, var(--background-primary) 75%, transparent)",
+      backgroundColor: "rgb(28 28 27 / .5)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -32,15 +32,15 @@ export const ModalPanel = ({
 }) => (
   <div
     style={{
-      backgroundColor: "var(--background-primary-alt)",
-      border: "1px solid var(--background-modifier-border)",
-      borderRadius: 16,
+      backgroundColor: "var(--background-raised)",
+      border: "1px solid var(--separator)",
+      borderRadius: "var(--radius-control)",
       padding: 24,
       width: 384,
       display: "flex",
       flexDirection: "column",
       gap: 16,
-      boxShadow: "0 24px 48px rgba(0,0,0,0.5)",
+      boxShadow: "var(--popover-shadow)",
     }}
     onClick={onClick}
   >
@@ -70,7 +70,7 @@ export const ModalCloseBtn = ({ onClick }: { onClick?: () => void }) => (
       fontSize: 16,
       cursor: "pointer",
       lineHeight: 1,
-      transition: "color 0.15s",
+      transition: "color var(--dur-fast) var(--ease-out)",
     }}
     onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-normal)"; }}
     onMouseLeave={(e) => { e.currentTarget.style.color = "var(--icon-color)"; }}
@@ -91,21 +91,12 @@ export const PrimaryButton = ({
   <button
     onClick={onClick}
     disabled={disabled}
+    className="btn btn-solid btn-md"
     style={{
-      backgroundColor: "var(--interactive-accent)",
-      color: "var(--text-on-accent)",
-      borderRadius: 10,
-      padding: "12px 0",
-      fontSize: 14,
-      fontWeight: 500,
-      border: "none",
       width: "100%",
+      opacity: disabled ? 0.45 : 1,
       cursor: disabled ? "not-allowed" : "pointer",
-      opacity: disabled ? 0.4 : 1,
-      transition: "background 0.15s, opacity 0.15s",
     }}
-    onMouseEnter={(e) => { if (!disabled) e.currentTarget.style.backgroundColor = "var(--interactive-accent-hover)"; }}
-    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--interactive-accent)"; }}
   >
     {children}
   </button>

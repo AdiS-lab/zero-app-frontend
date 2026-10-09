@@ -10,9 +10,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../api/axios";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import buildImage from "../helpers/build-image";
+import { BrandingPanel } from "../components/BrandingPanel";
+import { AuthFooter } from "../components/AuthFooter";
+import { AuthFormHeader } from "../components/AuthFormHeader";
+import { AuthDivider } from "../components/AuthDivider";
+import { OAuthButtons } from "../components/OAuthButtons";
 
 const schema = z.object({
   email: z.string().email(),
@@ -58,37 +63,41 @@ export default function Login() {
   };
 
   return (
-    <div style={{ flex: 1, height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--background-primary)" }}>
-      <FormLayout onSubmit={handleSubmit(loginUser)}>
-        <Field>
-          <Label>Email</Label>
-          <Input {...register("email")} type="email" />
-          {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
-        </Field>
+    <div className="auth-page">
+      <BrandingPanel />
 
-        <Field>
-          <Label>Password</Label>
-          <Input {...register("password")} type="password" />
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
-        </Field>
+      <div className="auth-form-side">
+        <FormLayout onSubmit={handleSubmit(loginUser)}>
+          <AuthFormHeader
+            title="Welcome back"
+            subtitle="Sign in to your account"
+          />
 
-        <Field>
+          <OAuthButtons />
+
+          <AuthDivider label="or" />
+
+          <Field>
+            <Label>Email address</Label>
+            <Input {...register("email")} type="email" placeholder="you@example.com" />
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+          </Field>
+
+          <Field>
+            <Label>Password</Label>
+            <Input {...register("password")} type="password" />
+            {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+          </Field>
+
           <Button type="submit">
-            {isSubmitting ? "Logging In..." : "Log In"}
+            {isSubmitting ? "Signing in\u2026" : "Continue"} <span className="arrow">&rarr;</span>
           </Button>
-        </Field>
 
-        {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
+          {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
 
-        <Link
-          to="/forgot-password/check-email"
-          style={{ fontSize: 13, color: "var(--text-faint)", textDecoration: "none", transition: "color 0.15s" }}
-          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-faint)"; }}
-        >
-          Forgot password?
-        </Link>
-      </FormLayout>
+          <AuthFooter mode="login" />
+        </FormLayout>
+      </div>
     </div>
   );
 }

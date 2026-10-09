@@ -13,7 +13,11 @@ import api from "../api/axios";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthContext } from "../contexts/Auth/useAuthContext";
 import buildImage from "../helpers/build-image";
-import config from "../config/config";
+import { BrandingPanel } from "../components/BrandingPanel";
+import { AuthFooter } from "../components/AuthFooter";
+import { AuthFormHeader } from "../components/AuthFormHeader";
+import { AuthDivider } from "../components/AuthDivider";
+import { OAuthButtons } from "../components/OAuthButtons";
 
 const schema = z.object({
   email: z.string().email(),
@@ -32,7 +36,6 @@ export default function Register() {
 
   const registerUser = async (data: { email: string; password: string }) => {
     try {
-      console.log(config.serverUrl);
       const res = await api.post("/api/v1/auth/signup", data);
       localStorage.setItem("accessToken", res.data.accessToken);
       if (res.status == 201) {
@@ -53,35 +56,47 @@ export default function Register() {
       navigate({ to: "/chathub" });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        console.log(error);
         setError("root", { message: error.message });
       }
     }
   };
 
   return (
-    <div style={{ flex: 1, height: "100%", display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "var(--background-primary)" }}>
-      <FormLayout onSubmit={handleSubmit(registerUser)}>
-        <Field>
-          <Label>Email</Label>
-          <Input {...register("email")} type="email" />
-          {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
-        </Field>
+    <div className="auth-page">
+      <BrandingPanel />
 
-        <Field>
-          <Label>Password</Label>
-          <Input {...register("password")} type="password" />
-          {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
-        </Field>
+      <div className="auth-form-side">
+        <FormLayout onSubmit={handleSubmit(registerUser)}>
+          <AuthFormHeader
+            title="Create your account"
+            subtitle="Welcome! Please fill in the details"
+          />
 
-        <Field>
+          <OAuthButtons />
+
+          <AuthDivider label="or" />
+
+          <Field>
+            <Label>Email address</Label>
+            <Input {...register("email")} type="email" placeholder="you@example.com" />
+            {errors.email && <ErrorText>{errors.email.message}</ErrorText>}
+          </Field>
+
+          <Field>
+            <Label>Password</Label>
+            <Input {...register("password")} type="password" placeholder="8+ characters" />
+            {errors.password && <ErrorText>{errors.password.message}</ErrorText>}
+          </Field>
+
           <Button type="submit">
-            {isSubmitting ? "Signing Up..." : "Sign Up"}
+            {isSubmitting ? "Creating account\u2026" : "Continue"} <span className="arrow">&rarr;</span>
           </Button>
-        </Field>
 
-        {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
-      </FormLayout>
+          {errors.root && <ErrorText>{errors.root.message}</ErrorText>}
+
+          <AuthFooter mode="register" />
+        </FormLayout>
+      </div>
     </div>
   );
 }
